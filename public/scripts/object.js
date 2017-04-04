@@ -103,7 +103,7 @@ function Birthday(id, person, day, month, year)
         if (parentMonth.childNodes.length == 0) {
             parentMonth.innerHTML =  "<li class=\"box\" id=\"birthday-" + this.id + "\"><h3>" + this.person + "</h3>" +
                 "<a href=\"#\" onclick=\"birthday" + this.id + ".edit()\" >(edit)</a> " +
-                "<span>" + this.day + " " + months[this.month] + " " + this.year +  "</span></li>";
+                "<span>" + this.day + " " + months[this.month].toLowerCase() + " " + this.year + "</span></li>";
         } else {
             console.log(parentMonth.childNodes);
             for (i = 0; i < parentMonth.childNodes.length; i++) {
@@ -117,16 +117,16 @@ function Birthday(id, person, day, month, year)
                 var newItem = document.createElement("li");
                 var textnode = document.createTextNode("<h3>" + this.person + "</h3>" +
                     "<a href=\"#\" onclick=\"birthday" + this.id + ".edit()\" >(edit)</a> " +
-                    "<span>" + this.day + " " + months[this.month] + " " + this.year +  "</span>");
-                newItem.appendChild(textnode)
+                    "<span>" + this.day + " " + months[this.month].toLowerCase() + " " + this.year +  "</span>");
+                newItem.appendChild(textnode);
 
                 if (this.day < day) {
-                    parentMonth.childNodes[i].childNodes[3].insertBefore();
+                    console.log(parentMonth.childNodes[i]);
+                    parentMonth.insertBefore(newItem, parentMonth.childNodes[i]);
+                    break;
                 } else if (this.day == day && this.year < year) {
                     console.log(parentMonth.childNodes[i].childNodes[3]);
                 }
-
-
             }
         }
     }
