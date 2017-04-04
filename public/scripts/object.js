@@ -35,6 +35,10 @@ function Birthday(id, person, day, month, year)
         "November",
         "December"];
 
+    const birthdayHtml = "<h3>" + this.person + "</h3>" +
+        "<a href=\"#\" onclick=\"birthday" + this.id + ".edit()\" >(edit)</a> " +
+        "" + this.day + " " + months[this.month].toLowerCase() + " " + this.year +  "";
+
     this.genWindow = function () {
         const body = document.getElementsByTagName('body')[0];
         let monthsHTML, daysHTML;
@@ -60,10 +64,10 @@ function Birthday(id, person, day, month, year)
     };
     this.edit = function()
     {
-        self.genWindow();
+        self.genWindow();console.log(this.day);
 
         document.getElementsByName("name")[0].setAttribute("value", this.person);
-        getElementsByAttribute("value", document.getElementById('day'))[this.day].setAttribute("selected", "true");
+        getElementsByAttribute("value", document.getElementById('day'))[this.day -1].setAttribute("selected", "true");
         getElementsByAttribute("value", document.getElementById('month'))[this.month - 1].setAttribute("selected", "true");
         document.getElementsByName("year")[0].setAttribute("value", this.year);
 
@@ -101,11 +105,8 @@ function Birthday(id, person, day, month, year)
         const parentMonth = document.getElementById("month-" + this.month).childNodes[1];
 
         if (parentMonth.childNodes.length == 0) {
-            parentMonth.innerHTML =  "<li class=\"box\" id=\"birthday-" + this.id + "\"><h3>" + this.person + "</h3>" +
-                "<a href=\"#\" onclick=\"birthday" + this.id + ".edit()\" >(edit)</a> " +
-                "<span>" + this.day + " " + months[this.month].toLowerCase() + " " + this.year + "</span></li>";
+            parentMonth.innerHTML =  birthdayHtml;
         } else {
-            console.log(parentMonth.childNodes);
             for (i = 0; i < parentMonth.childNodes.length; i++) {
                 let id = parentMonth.childNodes[i].id.split('-');
                 id = Number(id[1]);
@@ -115,19 +116,17 @@ function Birthday(id, person, day, month, year)
                 var day = day[1];
 
                 var newItem = document.createElement("li");
-                var textnode = document.createTextNode("<h3>" + this.person + "</h3>" +
-                    "<a href=\"#\" onclick=\"birthday" + this.id + ".edit()\" >(edit)</a> " +
-                    "<span>" + this.day + " " + months[this.month].toLowerCase() + " " + this.year +  "</span>");
+                var textnode = document.createTextNode("");
                 newItem.appendChild(textnode);
 
-                if (this.day < day) {
-                    console.log(parentMonth.childNodes[i]);
-                    parentMonth.insertBefore(newItem, parentMonth.childNodes[i]);
+                if ((this.day < day) || (this.day == day && this.year < year)) {
+                    var newElement = parentMonth.insertBefore(newItem, parentMonth.childNodes[i]);
                     break;
-                } else if (this.day == day && this.year < year) {
-                    console.log(parentMonth.childNodes[i].childNodes[3]);
                 }
             }
+            newElement.innerHTML = birthdayHtml;
+            newElement.setAttribute('id', "birthday-" + this.id);
+            newElement.setAttribute('class', 'box');
         }
     }
 }
