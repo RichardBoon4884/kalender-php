@@ -22,5 +22,3 @@ function render($filename = null, $data = null)
 	require(ROOT . 'view/template/footer.php');
 	http_response_code(200);
 }
-
-require ROOT . 'core/auth.php';

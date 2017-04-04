@@ -78,28 +78,28 @@ function getHtmlList()
                 if ($birthday["month"] > $monthsCount and $birthday["month"] < 13) {
                     $monthsCount++;
                     if ($monthsCount == 1) {
-                        $htmlCalender = "<nav id=\"" . $monthsCount . "\" class=\"list\"><h2>" . $months[$monthsCount] . "</h2><ul>";
+                        $htmlCalender = "<nav id=\"month-" . $monthsCount . "\" class=\"list\"><h2>" . $months[$monthsCount] . "</h2><ul>";
                     } elseif ($monthsCount == 12) {
-                        $htmlCalender .= "</ul></nav><nav id=\"" . $monthsCount . "\" class=\"list\"><h2>" . $months[$monthsCount] . "</h2><ul>";
+                        $htmlCalender .= "</ul></nav><nav id=\"month-" . $monthsCount . "\" class=\"list\"><h2>" . $months[$monthsCount] . "</h2><ul>";
                     } elseif ($monthsCount > 1 and $monthsCount < 12) {
-                        $htmlCalender .= "</ul></nav><nav id=\"" . $monthsCount . "\" class=\"list\"><h2>" . $months[$monthsCount] . "</h2><ul>";
+                        $htmlCalender .= "</ul></nav><nav id=\"month-" . $monthsCount . "\" class=\"list\"><h2>" . $months[$monthsCount] . "</h2><ul>";
                     }
                 }
             }
 
             if ($birthday["month"] == $monthsCount) {
-                $htmlCalender .= "<li class=\"box\" id=\"" . $birthday["id"] . "\"><h3>" . $birthday["person"]. "</h3> <a href=\"#\" onclick=\"birthday" . $birthday["id"] . ".edit()\" >(edit)</a> " . $birthday["day"]. " " . $months[$monthsCount] . " " . $birthday["year"]. "</li>";
+                $htmlCalender .= "<li class=\"box\" id=\"birthday-" . $birthday["id"] . "\"><h3>" . $birthday["person"]. "</h3> <a href=\"#\" onclick=\"birthday" . $birthday["id"] . ".edit()\" >(edit)</a> " . $birthday["day"]. " " . $months[$monthsCount] . " " . $birthday["year"]. "</li>";
             }
         }
     }
     while ($monthsCount < 12) {
         $monthsCount++;
         if ($monthsCount == 1) {
-            $htmlCalender .= "<nav id=\"" . $monthsCount . "\" class=\"list\"><h2>" . $months[$monthsCount] . "</h2><ul>";
+            $htmlCalender .= "<nav id=\"month-" . $monthsCount . "\" class=\"list\"><h2>" . $months[$monthsCount] . "</h2><ul>";
         } elseif ($monthsCount == 12) {
-            $htmlCalender .= "</ul></nav><nav id=\"" . $monthsCount . "\" class=\"list\"><h2>" . $months[$monthsCount] . "</h2><ul>";
+            $htmlCalender .= "</ul></nav><nav id=\"month-" . $monthsCount . "\" class=\"list\"><h2>" . $months[$monthsCount] . "</h2><ul>";
         } else {
-            $htmlCalender .= "</ul></nav><nav id=\"" . $monthsCount . "\" class=\"list\"><h2>" . $months[$monthsCount] . "</h2><ul></ul></nav>";
+            $htmlCalender .= "</ul></nav><nav id=\"month-" . $monthsCount . "\" class=\"list\"><h2>" . $months[$monthsCount] . "</h2><ul></ul></nav>";
         }
     }
 

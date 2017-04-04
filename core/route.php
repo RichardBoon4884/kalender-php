@@ -3,10 +3,10 @@ function route()
 {
 	$url = splitUrl();
 	if (!$url['controller']) {
-		require(ROOT . 'controller/HomeController.php');
+		require(ROOT . 'controller/' . DEFAULT_CONTROLLER . 'Controller.php');
 		call_user_func("index");
 	} elseif (file_exists(ROOT . 'controller/' . $url['controller'] . '.php')) {
-		if (method_exists($url['action'])) {
+		if (function_exists($url['action'])) {
 			if (!empty($url['params'])) {
 				call_user_func_array(array($controller, $url['action']), $url['params']);
 			} else {
