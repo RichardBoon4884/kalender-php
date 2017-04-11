@@ -37,7 +37,7 @@ function Birthday(id, person, day, month, year)
 
     this.birthdayHtml = function () {
           return "<h3>" + this.person + "</h3>" +
-              "<a href=\"#\" onclick=\"birthday" + this.id + ".edit()\" >(edit)</a> " +
+              "<span class=\"button\">(edit)</span> " +
               "" + this.day + " " + months[this.month].toLowerCase() + " " + this.year +  "";
     };
 
@@ -63,6 +63,7 @@ function Birthday(id, person, day, month, year)
     this.removeWindow = function () {
         document.getElementById('background').parentNode.removeChild(document.getElementById('background'));
         document.getElementById('window' + self.id).parentNode.removeChild(document.getElementById('window' + self.id));
+        listenEdit();
     };
     this.edit = function()
     {
@@ -90,9 +91,9 @@ function Birthday(id, person, day, month, year)
                     self.month = month;
                     self.year = year;
 
-                    self.removeWindow();
                     self.delete();
                     self.add();
+                    self.removeWindow();
                 } else {
                     return false;
                 }
@@ -160,5 +161,3 @@ function Birthday(id, person, day, month, year)
         }
     }
 }
-
-console.log("Ready obj.");

@@ -121,7 +121,7 @@ function getHtmlList()
             }
 
             if ($birthday["month"] == $monthsCount) {
-                $htmlCalender .= "<li class=\"box\" id=\"birthday-" . $birthday["id"] . "\"><h3>" . $birthday["person"]. "</h3> <span>(edit)</span> " . $birthday["day"]. " " . $months[$monthsCount] . " " . $birthday["year"]. "</li>";
+                $htmlCalender .= "<li class=\"box\" id=\"birthday-" . $birthday["id"] . "\"><h3>" . $birthday["person"]. "</h3> <span class=\"button\">(edit)</span> " . $birthday["day"]. " " . $months[$monthsCount] . " " . $birthday["year"]. "</li>";
             }
         }
     }
@@ -144,8 +144,7 @@ function getJsCode()
     $jsCode = null;
 
     foreach (getAllBirthdays() as $birthday) {
-        $jsCode .= "var birthday" . $birthday["id"] . " = new Birthday(" . $birthday['id'] . ", \"" . $birthday['person'] . "\", " . $birthday['day'] . ", " . $birthday['month'] . ", " . $birthday['year'] . ");        
-        window.onload = function(){document.getElementById(\"birthday-" . $birthday["id"] . "\").childNodes[2].onclick = function() {birthday" . $birthday["id"] . ".edit();}}\n        ";
+        $jsCode .= "var birthday" . $birthday["id"] . " = new Birthday(" . $birthday['id'] . ", \"" . $birthday['person'] . "\", " . $birthday['day'] . ", " . $birthday['month'] . ", " . $birthday['year'] . ");";
     }
 
     return $jsCode;

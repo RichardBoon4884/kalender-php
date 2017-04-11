@@ -15,8 +15,9 @@ function ajaxAdd($person, $day, $month, $year)
 {
     $id = addBirthday($person, $day, $month, $year);
 
-    echo "<script>var birthday" . $id . " = new Birthday(" . $id . ", \"" . $person . "\", 
-    " . $day . ", " . $month . ", " . $year . ")</script>;";
+//    echo "<script>var birthday" . $id . " = new Birthday(" . $id . ", \"" . $person . "\",
+//    " . $day . ", " . $month . ", " . $year . "); birthday" . $id . ".add();</script>;";
+    echo $id;
 }
 
 function ajaxEdit($id, $person, $day, $month, $year)
