@@ -23,6 +23,7 @@ window.onload = function(){
             document.getElementById("buttonCancel").onclick = function () {
                 document.getElementById('background').parentNode.removeChild(document.getElementById('background'));
     	        document.getElementById('window' + self.id).parentNode.removeChild(document.getElementById('window' + self.id));
+                listenEdit();
             };
             document.getElementById("buttonSubmit").onclick = function () {
                 var person = document.getElementsByName("name")[0].value;
