@@ -24,43 +24,76 @@ function getBirthday($id) {
     return $result;
 }
 
-function addBirthdays($day, $month, $year) {
-    try {
-        $db = openDb();
-        $sth = $db->prepare("INSERT INTO birthdays (
-            `person`,
-            `day`,
-            `month`,
-            `year`)
-            VALUES (
-            :person,
-            :day,
-            :month,
-            :year)");
-        $sth->bindParam(':person', $person);
-        $sth->bindParam(':day', $day);
-        $sth->bindParam(':month', $month);
-        $sth->bindParam(':year', $year);
+function addBirthday($person, $day, $month, $year) {
+    $db = openDb();
+    $sth = $db->prepare("INSERT INTO birthdays (
+        `person`,
+        `day`,
+        `month`,
+        `year`)
+        VALUES (
+        :person,
+        :day,
+        :month,
+        :year)");
+    $sth->bindParam(':person', $person);
+    $sth->bindParam(':day', $day);
+    $sth->bindParam(':month', $month);
+    $sth->bindParam(':year', $year);
 
-        $succes = $sth->execute();
+    $succes = $sth->execute();
 
-        $lastId = $db->lastInsertId();
+    $lastId = $db->lastInsertId();
 
-        $sth->fetchAll();
+    $db = closeDb();
 
-        $db = closeDb();
-
-        if ($succes == true) {
-            return $lastId;
-        } else {
-            return false;
-        }
+    if ($succes == true) {
+        return $lastId;
+    } else {
+        return false;
     }
-    catch(PDOException $e)
-    {
-        exit($e->getMessage());
-        return 0;
+}
+function editBirthday($id, $person, $day, $month, $year) {
+    $db = openDb();
+    $sth = $db->prepare("UPDATE birthdays SET
+        `person` = :person,
+        `day` = :day,
+        `month` = :month,
+        `year` = :year
+        WHERE id = :id");
+    $sth->bindParam(':person', $person);
+    $sth->bindParam(':day', $day);
+    $sth->bindParam(':month', $month);
+    $sth->bindParam(':year', $year);
+    $sth->bindParam(':id', $id);
 
+    $succes = $sth->execute();
+
+    $lastId = $db->lastInsertId();
+
+    $db = closeDb();
+
+    if ($succes == true) {
+        return true;
+    } else {
+        return false;
+    }
+}
+function deleteBirthday($id) {
+    $db = openDb();
+    $sth = $db->prepare("DELETE FROM birthdays WHERE id = :id");
+    $sth->bindParam(':id', $id);
+
+    $succes = $sth->execute();
+
+    $lastId = $db->lastInsertId();
+
+    $db = closeDb();
+
+    if ($succes == true) {
+        return true;
+    } else {
+        return false;
     }
 }
 function getHtmlList()
@@ -88,7 +121,7 @@ function getHtmlList()
             }
 
             if ($birthday["month"] == $monthsCount) {
-                $htmlCalender .= "<li class=\"box\" id=\"birthday-" . $birthday["id"] . "\"><h3>" . $birthday["person"]. "</h3> <a href=\"#\" onclick=\"birthday" . $birthday["id"] . ".edit()\" >(edit)</a> " . $birthday["day"]. " " . $months[$monthsCount] . " " . $birthday["year"]. "</li>";
+                $htmlCalender .= "<li class=\"box\" id=\"birthday-" . $birthday["id"] . "\"><h3>" . $birthday["person"]. "</h3> <span>(edit)</span> " . $birthday["day"]. " " . $months[$monthsCount] . " " . $birthday["year"]. "</li>";
             }
         }
     }
@@ -111,7 +144,8 @@ function getJsCode()
     $jsCode = null;
 
     foreach (getAllBirthdays() as $birthday) {
-        $jsCode .= "var birthday" . $birthday["id"] . " = new Birthday(" . $birthday['id'] . ", \"" . $birthday['person'] . "\", " . $birthday['day'] . ", " . $birthday['month'] . ", " . $birthday['year'] . ");";
+        $jsCode .= "var birthday" . $birthday["id"] . " = new Birthday(" . $birthday['id'] . ", \"" . $birthday['person'] . "\", " . $birthday['day'] . ", " . $birthday['month'] . ", " . $birthday['year'] . ");        
+        window.onload = function(){document.getElementById(\"birthday-" . $birthday["id"] . "\").childNodes[2].onclick = function() {birthday" . $birthday["id"] . ".edit();}}\n        ";
     }
 
     return $jsCode;

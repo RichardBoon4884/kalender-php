@@ -35,9 +35,11 @@ function Birthday(id, person, day, month, year)
         "November",
         "December"];
 
-    const birthdayHtml = "<h3>" + this.person + "</h3>" +
-        "<a href=\"#\" onclick=\"birthday" + this.id + ".edit()\" >(edit)</a> " +
-        "" + this.day + " " + months[this.month].toLowerCase() + " " + this.year +  "";
+    this.birthdayHtml = function () {
+          return "<h3>" + this.person + "</h3>" +
+              "<a href=\"#\" onclick=\"birthday" + this.id + ".edit()\" >(edit)</a> " +
+              "" + this.day + " " + months[this.month].toLowerCase() + " " + this.year +  "";
+    };
 
     this.genWindow = function () {
         const body = document.getElementsByTagName('body')[0];
@@ -64,7 +66,7 @@ function Birthday(id, person, day, month, year)
     };
     this.edit = function()
     {
-        self.genWindow();console.log(this.day);
+        self.genWindow();
 
         document.getElementsByName("name")[0].setAttribute("value", this.person);
         getElementsByAttribute("value", document.getElementById('day'))[this.day -1].setAttribute("selected", "true");
@@ -75,25 +77,49 @@ function Birthday(id, person, day, month, year)
             self.removeWindow();
         };
         document.getElementById("buttonSubmit").onclick = function () {
-            // TODO: Ajax request
+            var person = document.getElementsByName("name")[0].value;
+            var day = Number(document.getElementsByName("day")[0].value);
+            var month = Number(document.getElementsByName("month")[0].value);
+            var year = Number(document.getElementsByName("year")[0].value);
 
-            self.person = document.getElementsByName("name")[0].value;
-            self.day = Number(document.getElementsByName("day")[0].value);
-            self.month = Number(document.getElementsByName("month")[0].value);
-            self.year = Number(document.getElementsByName("year")[0].value);
+            var xmlhttp = new XMLHttpRequest();
+            xmlhttp.onreadystatechange = function() {
+                if (this.readyState == 4 && this.status == 200) {
+                    self.person = person;
+                    self.day = day;
+                    self.month = month;
+                    self.year = year;
 
-            self.removeWindow();
-            self.delete();
-            self.add();
+                    self.removeWindow();
+                    self.delete();
+                    self.add();
+                } else {
+                    return false;
+                }
+            };
+            xmlhttp.open("GET", "/kalender-php/calendar/ajaxedit/" + id + "/" + person + "/" + day + "/" + month + "/" + year, true);
+            xmlhttp.send();
         };
         document.getElementById("buttonDelete").onclick = function () {
             document.getElementById("buttonDelete").innerHTML = "Verwijderen: Zeker?";
             document.getElementById("buttonDelete").setAttribute("id", "buttonDeleteConfirm");
             document.getElementById("buttonDeleteConfirm").onclick = function () {
-                //TODO: Ajax request
+                var xmlhttp = new XMLHttpRequest();
+                xmlhttp.onreadystatechange = function() {
+                    if (this.readyState == 4 && this.status == 200) {
+                        self.person = person;
+                        self.day = day;
+                        self.month = month;
+                        self.year = year;
 
-                self.delete();
-                self.removeWindow();
+                        self.delete();
+                        self.removeWindow();
+                    } else {
+                        return false;
+                    }
+                };
+                xmlhttp.open("GET", "/kalender-php/calendar/ajaxdelete/" + id, true);
+                xmlhttp.send();
             }
         }
     };
@@ -105,7 +131,8 @@ function Birthday(id, person, day, month, year)
         const parentMonth = document.getElementById("month-" + this.month).childNodes[1];
 
         if (parentMonth.childNodes.length == 0) {
-            parentMonth.innerHTML =  birthdayHtml;
+            parentMonth.innerHTML = "<li id=\"birthday-" + self.id +  "\" class=\"box\">" + this.birthdayHtml() + "</li>";
+            return true;
         } else {
             for (i = 0; i < parentMonth.childNodes.length; i++) {
                 let id = parentMonth.childNodes[i].id.split('-');
@@ -113,7 +140,7 @@ function Birthday(id, person, day, month, year)
 
                 var day = (parentMonth.childNodes[i].childNodes[3].data.split(" "));
                 var year = day[3];
-                var day = day[1];
+                day = day[1];
 
                 var newItem = document.createElement("li");
                 var textnode = document.createTextNode("");
@@ -121,12 +148,15 @@ function Birthday(id, person, day, month, year)
 
                 if ((this.day < day) || (this.day == day && this.year < year)) {
                     var newElement = parentMonth.insertBefore(newItem, parentMonth.childNodes[i]);
-                    break;
+
+                    newElement.innerHTML = this.birthdayHtml();
+                    newElement.setAttribute('id', "birthday-" + this.id);
+                    newElement.setAttribute('class', 'box');
+
+                    return true;
                 }
             }
-            newElement.innerHTML = birthdayHtml;
-            newElement.setAttribute('id', "birthday-" + this.id);
-            newElement.setAttribute('class', 'box');
+            parentMonth.innerHTML += "<li id=\"birthday-" + self.id +  "\" class=\"box\">" + this.birthdayHtml() + "</li>";
         }
     }
 }

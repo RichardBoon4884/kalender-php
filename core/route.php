@@ -1,26 +1,27 @@
 <?php
 function route()
 {
-	$url = splitUrl();
-	if (!$url['controller']) {
-		require(ROOT . 'controller/' . DEFAULT_CONTROLLER . 'Controller.php');
-		call_user_func("index");
-	} elseif (file_exists(ROOT . 'controller/' . $url['controller'] . '.php')) {
-		if (function_exists($url['action'])) {
-			if (!empty($url['params'])) {
-				call_user_func_array(array($controller, $url['action']), $url['params']);
-			} else {
-				call_user_func(array($controller, $url['action']));
-			}
-		} else {
-			require(ROOT . 'controller/ErrorController.php');
-			call_user_func("error404");
-		}
-	} else {
-		require(ROOT . 'controller/ErrorController.php');
-		$controller = new ErrorController();
-		call_user_func("error404");
-	}
+    $url = splitUrl();
+
+    if (!$url['controller']) {
+        require(ROOT . 'controller/' . DEFAULT_CONTROLLER . 'Controller.php');
+        call_user_func('index');
+    } elseif (file_exists(ROOT . 'controller/' . $url['controller'] . '.php')) {
+        require(ROOT . 'controller/' . $url['controller'] . '.php');
+        if (function_exists($url['action'])) {
+            if ($url['params']) {
+                call_user_func_array($url['action'], $url['params']);
+            } else {
+                call_user_func($url['action']);
+            }
+        } else {
+            require(ROOT . 'controller/ErrorController.php');
+            call_user_func('error404');
+        }
+    } else {
+        require(ROOT . 'controller/ErrorController.php');
+        call_user_func('error404');
+    }
 }
 function splitUrl()
 {
